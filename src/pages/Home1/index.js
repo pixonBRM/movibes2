@@ -1,7 +1,13 @@
-import React from "react";
-
-import { Img, Text, Line, Stack, Button, List } from "components";
+import React, {useState, useEffect} from "react";
+import Card from "../Home1/card";
+import "../Home1/style.css";
+import { Img, Text, Line, Stack, Button, List, } from "components";
 import { useNavigate } from "react-router-dom";
+
+let API_key="&api_key=035daaa1b16558de2f41c0a4d2275f9c";
+let base_url="https://api.themoviedb.org/3";
+let url=base_url+"/discover/movie?sort_by=popularity.desc"+API_key;
+let arr = ["Action","Adventure","Animated","Comedy","Crime","Fantasy"];
 
 const Home1Page = () => {
   const navigate = useNavigate();
@@ -16,6 +22,60 @@ const Home1Page = () => {
     navigate("/moviesone");
   }
 
+const [moviesData, setMovies] = useState([]);
+const [url_set, setUrl] = useState(url);
+const [search, setSearch] = useState();
+
+useEffect(() => {
+    fetch(url_set)
+    .then((res) => res.json())
+    .then(data=>{
+      // console.log(data.results);
+      setMovies(data.results);
+    });
+  },[url_set])
+
+
+   const getData=(movieType)=>{
+    if(movieType=="Upcoming")
+    {
+      url=base_url+"/discover/movie?with_genres=18&primary_release_year=2014"+API_key;
+    }
+    if(movieType=="Popular")
+    {
+      url=base_url+"/discover/movie?with_genres=18&sort_by=vote_average.desc&vote_count.gte=10"+API_key;
+    }
+    if(movieType=="Adventure")
+    {
+      url=base_url+"/discover/movie?with_genres=18&sort_by=vote_average.desc&vote_count.gte=10"+API_key;
+    }
+    if(movieType=="Action")
+    {
+      url=base_url+"/discover/movie?with_people=108916,7467&sort_by=popularity.desc"+API_key;
+    }
+    if(movieType=="Animation")
+    {
+      url=base_url+"/discover/movie?certification_country=US&certification.lte=G&sort_by=popularity.desc"+API_key;
+    }
+    if(movieType=="Comedy")
+    {
+      url=base_url+"/discover/movie?with_genres=35&with_cast=23659&sort_by=revenue.desc"+API_key;
+    }
+    if(movieType=="Fantasy")
+    {
+      url=base_url+"/discover/movie?with_people=287,819&sort_by=vote_average.desc"+API_key;
+    }
+    setUrl(url);
+  }
+
+  const searchMovie=(evt)=>{
+    if(evt.key==="Enter")
+     {
+      url=base_url+"/search/movie?api_key=035daaa1b16558de2f41c0a4d2275f9c&query="+search;
+      setUrl(url);
+      setSearch(" ");
+    }
+  }
   return (
     <>
       <div className="bg-gray_900 flex flex-col font-poppins items-center justify-end mx-[auto] sm:pr-[15px] md:pr-[33px] pr-[51px] w-[100%]">
@@ -155,15 +215,14 @@ const Home1Page = () => {
           <div className="flex flex-col items-center justify-start sm:mt-[21px] md:mt-[27px] mt-[42px] sm:mx-[0] sm:px-[0] sm:w-[100%] w-[83%]">
             <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center sm:px-[0] w-[100%]">
               <div className="bg-gray_901 flex flex-row md:flex-wrap sm:flex-wrap items-center sm:mx-[0] my-[2px] p-[13px] sm:p-[6px] md:p-[8px] rounded-radius30 shadow-bs4 sm:w-[100%] w-[75%]">
-                <Img
-                  src="images/img_search.png"
-                  className="flex-shrink-0 sm:h-[18px] md:h-[23px] h-[35px] max-w-[100%] sm:ml-[14px] md:ml-[18px] ml-[28px] sm:w-[17px] md:w-[22px] w-[35px]"
-                  alt="Search"
+                <input
+                  type="text" style={{backgroundColor: "#19191933", width: "50%", borderRadius: "10px"}}
+                   placeholder="Enter Movie here" onChange={(e)=>{setSearch(e.target.value)}} value={search} onKeyPress={searchMovie} alt="Search"
                 />
                 <Text
                   className="flex-grow font-semibold sm:ml-[12px] md:ml-[16px] ml-[25px] mt-[1px] text-gray_700 text-shadow-ts"
-                  as="h3"
-                  variant="h3"
+                  as="h6"
+                  variant="h6"
                 >
                   Search for movies, TV shows...
                 </Text>
@@ -240,376 +299,14 @@ const Home1Page = () => {
                           See all
                         </Text>
                       </div>
-                      <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center justify-between sm:mt-[13px] md:mt-[17px] mt-[27px] w-[100%]">
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group34.png')",
-                          }}
-                        >
-                          <div className="bg-gray_200_26 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[4px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star"
-                            />
-                            <Text
-                              className="flex-grow sm:mx-[2px] md:mx-[3px] mx-[5px] text-gray_200"
-                              variant="body3"
-                            >
-                              8.8
-                            </Text>
-                          </div>
-                        </div>
-                        <div
-                          className="common-pointer bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group35.png')",
-                          }}
-                          onClick={handleNavigate31}
-                        >
-                          <div className="bg-gray_900_26 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[4px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star One"
-                            />
-                            <Text
-                              className="flex-grow sm:mx-[2px] md:mx-[3px] mx-[5px] text-gray_200"
-                              variant="body3"
-                            >
-                              8.5
-                            </Text>
-                          </div>
-                        </div>
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group36.png')",
-                          }}
-                        >
-                          <div className="bg-gray_200_26 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[4px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star Two"
-                            />
-                            <Text
-                              className="flex-grow sm:mx-[2px] md:mx-[3px] mx-[5px] text-gray_200"
-                              variant="body3"
-                            >
-                              7.0
-                            </Text>
-                          </div>
-                        </div>
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group37.png')",
-                          }}
-                        >
-                          <div className="bg-gray_200_26 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[4px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star Three"
-                            />
-                            <Text
-                              className="flex-grow sm:mx-[2px] md:mx-[3px] mx-[5px] text-gray_200"
-                              variant="body3"
-                            >
-                              7.8
-                            </Text>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center justify-start w-[100%]">
-                    <div className="flex flex-col items-center justify-start w-[100%]">
-                      <div className="flex flex-row md:flex-wrap sm:flex-wrap items-start justify-between w-[100%]">
-                        <Text
-                          className="font-semibold text-gray_200 w-[auto]"
-                          as="h3"
-                          variant="h3"
-                        >
-                          Upcoming
-                        </Text>
-                        <Text
-                          className="font-semibold mt-[1px] text-gray_700 w-[auto]"
-                          variant="body4"
-                        >
-                          See all
-                        </Text>
-                      </div>
-                      <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center justify-between sm:mt-[13px] md:mt-[17px] mt-[27px] w-[100%]">
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group23.png')",
-                          }}
-                        >
-                          <div className="bg-gray_900_26 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[4px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star One"
-                            />
-                            <Text
-                              className="flex-grow md:mx-[3px] sm:mx-[3px] mx-[6px] text-gray_200"
-                              variant="body3"
-                            >
-                              7.3
-                            </Text>
-                          </div>
-                        </div>
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group24.png')",
-                          }}
-                        >
-                          <div className="bg-gray_200_19 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[4px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star One One"
-                            />
-                            <Text
-                              className="flex-grow sm:mx-[2px] md:mx-[3px] mx-[5px] text-gray_200"
-                              variant="body3"
-                            >
-                              7.4
-                            </Text>
-                          </div>
-                        </div>
-                        <Img
-                          src="images/img_rectangle19.png"
-                          className="max-w-[100%] rounded-radius20 w-[23%]"
-                          alt="RectangleNineteen"
-                        />
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group25.png')",
-                          }}
-                        >
-                          <div className="bg-gray_200_19 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[4px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star Two One"
-                            />
-                            <Text
-                              className="flex-grow sm:mx-[2px] md:mx-[3px] mx-[5px] text-gray_200"
-                              variant="body3"
-                            >
-                              7.4
-                            </Text>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center justify-start w-[100%]">
-                    <div className="flex flex-col items-center justify-start w-[100%]">
-                      <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center justify-between w-[100%]">
-                        <Text
-                          className="font-semibold text-gray_200 w-[auto]"
-                          as="h3"
-                          variant="h3"
-                        >
-                          TV Series
-                        </Text>
-                        <Text
-                          className="font-semibold text-gray_700 w-[auto]"
-                          variant="body4"
-                        >
-                          See all
-                        </Text>
-                      </div>
-                      <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center justify-between sm:mt-[14px] md:mt-[19px] mt-[29px] w-[100%]">
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group26.png')",
-                          }}
-                        >
-                          <div className="bg-gray_900_26 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[2px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star Two"
-                            />
-                            <Text
-                              className="flex-grow md:mx-[3px] sm:mx-[3px] mx-[6px] text-gray_200"
-                              variant="body3"
-                            >
-                              6.8
-                            </Text>
-                          </div>
-                        </div>
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group27.png')",
-                          }}
-                        >
-                          <div className="bg-gray_200_19 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[2px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star One Two"
-                            />
-                            <Text
-                              className="flex-grow md:mx-[3px] sm:mx-[3px] mx-[6px] text-gray_200"
-                              variant="body3"
-                            >
-                              5.0
-                            </Text>
-                          </div>
-                        </div>
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group28.png')",
-                          }}
-                        >
-                          <div className="bg-gray_200_19 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[2px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star Two Two"
-                            />
-                            <Text
-                              className="flex flex-grow items-center md:mx-[3px] sm:mx-[3px] mx-[6px] text-gray_200"
-                              variant="body3"
-                            >
-                              8.7
-                            </Text>
-                          </div>
-                        </div>
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group29.png')",
-                          }}
-                        >
-                          <div className="bg-gray_200_19 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[2px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star Three One"
-                            />
-                            <Text
-                              className="flex-grow sm:ml-[2px] md:ml-[3px] ml-[5px] sm:mr-[4px] md:mr-[5px] mr-[9px] text-gray_200"
-                              variant="body3"
-                            >
-                              7.3
-                            </Text>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center justify-start w-[100%]">
-                    <div className="flex flex-col items-center justify-start w-[100%]">
-                      <div className="flex flex-row md:flex-wrap sm:flex-wrap items-start justify-between w-[100%]">
-                        <Text
-                          className="font-semibold text-gray_200 w-[auto]"
-                          as="h3"
-                          variant="h3"
-                        >
-                          Popular movies on september
-                        </Text>
-                        <Text
-                          className="font-semibold sm:mt-[2px] md:mt-[3px] mt-[5px] text-gray_700 w-[auto]"
-                          variant="body4"
-                        >
-                          See all
-                        </Text>
-                      </div>
-                      <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center justify-between sm:mt-[13px] md:mt-[17px] mt-[27px] w-[100%]">
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group30.png')",
-                          }}
-                        >
-                          <div className="bg-gray_900_26 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[2px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star Three"
-                            />
-                            <Text
-                              className="flex-grow md:mx-[3px] sm:mx-[3px] mx-[6px] text-gray_200"
-                              variant="body3"
-                            >
-                              6.5
-                            </Text>
-                          </div>
-                        </div>
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group31.png')",
-                          }}
-                        >
-                          <div className="bg-gray_200_19 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[2px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star One Three"
-                            />
-                            <Text
-                              className="flex-grow sm:ml-[2px] md:ml-[3px] ml-[5px] mr-[12px] sm:mr-[6px] md:mr-[7px] text-gray_200"
-                              variant="body3"
-                            >
-                              6.1
-                            </Text>
-                          </div>
-                        </div>
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group32.png')",
-                          }}
-                        >
-                          <div className="bg-gray_900_19 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[2px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star Two Three"
-                            />
-                            <Text
-                              className="flex flex-grow items-center sm:ml-[2px] md:ml-[3px] ml-[5px] sm:mr-[4px] md:mr-[5px] mr-[8px] text-white_A701"
-                              variant="body3"
-                            >
-                              6.7
-                            </Text>
-                          </div>
-                        </div>
-                        <div
-                          className="bg-cover bg-no-repeat flex flex-col items-end sm:mx-[0] pb-[132px] sm:pb-[15px] md:pb-[86px] pl-[132px] sm:pl-[15px] md:pl-[86px] rounded-radius20 sm:w-[100%] w-[23%]"
-                          style={{
-                            backgroundImage: "url('images/img_group33.png')",
-                          }}
-                        >
-                          <div className="bg-gray_200_19 flex flex-row md:flex-wrap sm:flex-wrap items-center justify-end md:mb-[101px] mb-[155px] sm:mb-[78px] p-[2px] rounded-bl-[20px] rounded-br-[0] rounded-tl-[0] rounded-tr-[20px] w-[100%]">
-                            <Img
-                              src="images/img_star.png"
-                              className="flex-shrink-0 sm:h-[11px] md:h-[14px] h-[20px] max-w-[100%] sm:w-[10px] md:w-[13px] w-[20px]"
-                              alt="Star Three Two"
-                            />
-                            <Text
-                              className="flex-grow md:mx-[3px] sm:mx-[3px] mx-[6px] text-gray_200"
-                              variant="body3"
-                            >
-                              6.0
-                            </Text>
-                          </div>
-                        </div>
+                      <div className="container ">
+                          {
+                            (moviesData.length===0)?<p className="notfound"></p>:moviesData.map((res,pos)=>{
+                              return(
+                              <Card info={res} key={pos}/>
+                              )
+                            })
+                          }
                       </div>
                     </div>
                   </div>
@@ -639,109 +336,31 @@ const Home1Page = () => {
                     <div className="flex flex-col items-center justify-start ml-[4px] sm:mx-[0] my-[0] sm:px-[0] sm:w-[100%] w-[99%]">
                       <div className="flex flex-col items-center justify-start w-[100%]">
                         <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center justify-between w-[100%]">
-                          <Text
+                          <ul
                             className="flex-grow font-medium text-gray_200"
-                            variant="body4"
+                            variant="body4" 
                           >
-                            Action
-                          </Text>
-                          <Img
-                            src="images/img_checkedcheckbo.png"
-                            className="flex-shrink-0 sm:h-[16px] md:h-[20px] h-[30px] max-w-[100%] sm:w-[15px] md:w-[19px] w-[30px]"
-                            alt="CheckedCheckbo"
-                          />
+                          <li >  
+                            {
+                               arr.map((value)=>{
+                                 return(
+                                  <p style={{paddingBottom: "30px", display: "flex", justifyContent: "space-between"}} name={value} onClick={(e)=>{getData(e.target.name)}}>
+                                  {value}
+                                  <Img
+                                    src="images/img_checkedcheckbo.png"
+                                    className="flex-shrink-0 sm:h-[16px] md:h-[20px] h-[30px] max-w-[100%] sm:w-[15px] md:w-[19px] w-[30px]"
+                                    alt="CheckedCheckbo"/>
+                                  </p>
+                                 )
+                               })
+                             }
+                             <Line className="bg-gray_700_4c h-[2px] sm:mt-[2px] md:mt-[3px] mt-[5px] w-[100%]" />
+                          </li>
+                          
+                          </ul>
+                          
                         </div>
-                        <Line className="bg-gray_700_4c h-[2px] sm:mt-[2px] md:mt-[3px] mt-[5px] w-[100%]" />
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center justify-start ml-[3px] sm:mx-[0] my-[0] sm:px-[0] sm:w-[100%] w-[99%]">
-                      <div className="flex flex-col items-center justify-start w-[100%]">
-                        <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center justify-between w-[100%]">
-                          <Text
-                            className="flex-grow font-medium text-gray_200"
-                            variant="body4"
-                          >
-                            Adventure
-                          </Text>
-                          <Img
-                            src="images/img_checkedcheckbo.png"
-                            className="flex-shrink-0 sm:h-[16px] md:h-[20px] h-[30px] max-w-[100%] sm:w-[15px] md:w-[19px] w-[30px]"
-                            alt="CheckedCheckbo One"
-                          />
-                        </div>
-                        <Line className="bg-gray_700_4c h-[2px] md:mt-[3px] sm:mt-[3px] mt-[6px] w-[100%]" />
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center justify-start ml-[2px] sm:mx-[0] my-[0] sm:px-[0] sm:w-[100%] w-[99%]">
-                      <div className="flex flex-col items-center justify-start w-[100%]">
-                        <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center justify-between sm:px-[0] w-[100%]">
-                          <Text
-                            className="flex-grow font-medium text-gray_200"
-                            variant="body4"
-                          >
-                            Animated
-                          </Text>
-                          <Img
-                            src="images/img_checkedcheckbo.png"
-                            className="flex-shrink-0 sm:h-[16px] md:h-[20px] h-[30px] max-w-[100%] sm:w-[15px] md:w-[19px] w-[30px]"
-                            alt="CheckedCheckbo Two"
-                          />
-                        </div>
-                        <Line className="bg-gray_700_4c h-[2px] md:mt-[3px] sm:mt-[3px] mt-[6px] w-[100%]" />
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center justify-start sm:mx-[0] mx-[auto] my-[0] sm:px-[0] sm:w-[100%] w-[99%]">
-                      <div className="flex flex-col items-center justify-start w-[100%]">
-                        <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center justify-between sm:px-[0] w-[100%]">
-                          <Text
-                            className="flex-grow font-medium text-gray_200"
-                            variant="body4"
-                          >
-                            Comedy
-                          </Text>
-                          <Img
-                            src="images/img_checkedcheckbo.png"
-                            className="flex-shrink-0 sm:h-[16px] md:h-[20px] h-[30px] max-w-[100%] sm:w-[15px] md:w-[19px] w-[30px]"
-                            alt="CheckedCheckbo Three"
-                          />
-                        </div>
-                        <Line className="bg-gray_700_4c h-[2px] md:mt-[3px] sm:mt-[3px] mt-[6px] w-[100%]" />
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center justify-start my-[0] sm:px-[0] w-[100%]">
-                      <div className="flex flex-col items-center justify-start w-[100%]">
-                        <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center justify-between sm:mx-[0] sm:px-[0] sm:w-[100%] w-[99%]">
-                          <Text
-                            className="flex-grow font-medium text-gray_200"
-                            variant="body4"
-                          >
-                            Crime
-                          </Text>
-                          <Img
-                            src="images/img_checkedcheckbo.png"
-                            className="flex-shrink-0 sm:h-[16px] md:h-[20px] h-[30px] max-w-[100%] sm:w-[15px] md:w-[19px] w-[30px]"
-                            alt="CheckedCheckbo Four"
-                          />
-                        </div>
-                        <Line className="bg-gray_700_4c h-[2px] md:mt-[3px] sm:mt-[3px] mt-[6px] sm:w-[100%] w-[99%]" />
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center justify-start my-[0] w-[100%]">
-                      <div className="flex flex-col items-center justify-start w-[100%]">
-                        <div className="flex flex-row md:flex-wrap sm:flex-wrap items-center justify-between sm:mx-[0] sm:px-[0] sm:w-[100%] w-[99%]">
-                          <Text
-                            className="flex-grow font-medium text-gray_200"
-                            variant="body4"
-                          >
-                            Fantasy
-                          </Text>
-                          <Img
-                            src="images/img_checkedcheckbo.png"
-                            className="flex-shrink-0 sm:h-[16px] md:h-[20px] h-[30px] max-w-[100%] sm:w-[15px] md:w-[19px] w-[30px]"
-                            alt="CheckedCheckbo Five"
-                          />
-                        </div>
-                        <Line className="bg-gray_700_4c h-[2px] md:mt-[3px] sm:mt-[3px] mt-[6px] sm:w-[100%] w-[98%]" />
+                        
                       </div>
                     </div>
                   </List>
